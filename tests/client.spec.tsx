@@ -27,13 +27,6 @@ describe('Client UI Plugin', () => {
     expect(screen.getByText('Peak')).toBeDefined()
   })
 
-  it('renders Chinese copy when locale="zh"', () => {
-    const offPeakDate = new Date('2026-08-19T00:30:00Z')
-    render(<PeakBadge initialDate={offPeakDate} locale="zh" />)
-
-    expect(screen.getByText('优惠时段')).toBeDefined()
-  })
-
   it('opens and closes popover on click', () => {
     const offPeakDate = new Date('2026-08-19T00:30:00Z')
     render(<PeakBadge initialDate={offPeakDate} />)
@@ -41,15 +34,15 @@ describe('Client UI Plugin', () => {
     const button = screen.getByRole('button')
     fireEvent.click(button)
 
-    expect(screen.getByText('DeepSeek API Pricing Status')).toBeDefined()
-    expect(screen.getByText('DeepSeek-V4 Flash')).toBeDefined()
-    expect(screen.getByText('DeepSeek-V4 Pro')).toBeDefined()
+    expect(screen.getByText('DeepSeek Pricing')).toBeDefined()
+    expect(screen.getByText('V4 Flash')).toBeDefined()
+    expect(screen.getByText('V4 Pro')).toBeDefined()
 
     // Close button
     const closeBtn = screen.getByLabelText('Close')
     fireEvent.click(closeBtn)
 
-    expect(screen.queryByText('DeepSeek API Pricing Status')).toBeNull()
+    expect(screen.queryByText('DeepSeek Pricing')).toBeNull()
   })
 
   it('mounts and unmounts programmatically via mountPeakBadge', async () => {
@@ -71,6 +64,12 @@ describe('Client UI Plugin', () => {
 
   it('registers Cordis apply and cleans up DOM completely on effect disposal', async () => {
     let effectDisposer: (() => void) | undefined
+
+    const header = document.createElement('header')
+    const modeBtn = document.createElement('button')
+    modeBtn.textContent = 'Standard mode'
+    header.appendChild(modeBtn)
+    document.body.appendChild(header)
 
     const mockCtx = {
       locale: {

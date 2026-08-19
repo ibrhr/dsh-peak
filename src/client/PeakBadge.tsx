@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { getPeakStatus } from '../core/schedule.ts'
 import type { PeakScheduleConfig, PeakStatusResult } from '../core/types.ts'
-import { en, zh, type PeakLocaleKey } from './locales.ts'
 import { PeakPopover } from './PeakPopover.tsx'
 import styles from './PeakBadge.module.css'
 
@@ -18,7 +17,6 @@ export const PeakBadge: React.FC<PeakBadgeProps> = ({
   initialDate,
   config,
   locale = 'en',
-  compact = false,
   className = '',
   style,
 }) => {
@@ -49,7 +47,6 @@ export const PeakBadge: React.FC<PeakBadgeProps> = ({
     }
   }
 
-  const t: PeakLocaleKey = locale === 'zh' ? zh : en
   const isOffPeak = status.state === 'OFF_PEAK'
 
   return (
@@ -63,14 +60,14 @@ export const PeakBadge: React.FC<PeakBadgeProps> = ({
         type="button"
         className={`${styles.pill} ${isOffPeak ? styles.offPeak : styles.peak}`}
         onClick={handleToggle}
-        title={`${isOffPeak ? t.offPeak : t.peak} - ${isOffPeak ? t.endsIn : t.nextOffPeakIn} ${status.formattedCountdown}`}
+        title={isOffPeak ? `Off-peak (50% off) · Ends in ${status.formattedCountdown}` : `Peak hours · Off-peak in ${status.formattedCountdown}`}
         aria-expanded={isPopoverOpen}
         aria-haspopup="dialog"
       >
         <span className={styles.dot} />
-        <span className={styles.statusText}>{isOffPeak ? t.offPeak : t.peak}</span>
-        <span className={styles.separator}>·</span>
-        <span className={styles.countdownText}>{status.formattedCountdown}</span>
+        <span>{isOffPeak ? 'Off-peak' : 'Peak'}</span>
+        <span style={{ opacity: 0.35 }}>·</span>
+        <span className={styles.countdown}>{status.formattedCountdown}</span>
       </button>
 
       {isPopoverOpen && (

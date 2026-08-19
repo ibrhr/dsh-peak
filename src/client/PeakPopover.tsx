@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import type { PeakStatusResult } from '../core/types.ts'
 import { DEEPSEEK_MODELS } from '../core/pricing.ts'
-import { en, zh, type PeakLocaleKey } from './locales.ts'
 import styles from './PeakBadge.module.css'
 
 export interface PeakPopoverProps {
@@ -16,10 +15,8 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
   status,
   anchorRect,
   onClose,
-  locale = 'en',
 }) => {
   const popoverRef = useRef<HTMLDivElement>(null)
-  const t: PeakLocaleKey = locale === 'zh' ? zh : en
   const isOffPeak = status.state === 'OFF_PEAK'
 
   // Close on Escape key
@@ -49,37 +46,27 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
     }
   }, [onClose])
 
-  // Calculate viewport-aware absolute positioning
+  // Positioning
   let popoverStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: '56px',
+    top: '48px',
     left: '20px',
-    zIndex: 99999,
   }
 
   if (anchorRect && typeof window !== 'undefined') {
-    const popoverWidth = 360
-    let top = anchorRect.bottom + 8
+    const popoverWidth = 300
+    let top = anchorRect.bottom + 6
     let left = anchorRect.left
 
-    // Keep within horizontal screen bounds
-    if (left + popoverWidth > window.innerWidth - 16) {
-      left = window.innerWidth - popoverWidth - 16
+    if (left + popoverWidth > window.innerWidth - 12) {
+      left = window.innerWidth - popoverWidth - 12
     }
-    if (left < 16) {
-      left = 16
-    }
-
-    // Keep within vertical screen bounds
-    if (top + 380 > window.innerHeight && anchorRect.top > 380) {
-      top = anchorRect.top - 390
+    if (left < 12) {
+      left = 12
     }
 
     popoverStyle = {
-      position: 'fixed',
       top: `${top}px`,
       left: `${left}px`,
-      zIndex: 99999,
     }
   }
 
@@ -89,116 +76,83 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
       className={styles.popover}
       style={popoverStyle}
       role="dialog"
-      aria-label={t.statusTitle}
+      aria-label="DeepSeek Pricing"
       onClick={(e) => e.stopPropagation()}
     >
+      {/* Header */}
       <div className={styles.popoverHeader}>
-        <div className={styles.popoverTitle}>
-          <span>{t.statusTitle}</span>
-          {isOffPeak ? (
-            <span className={styles.scheduleTagOffPeak}>50% OFF</span>
-          ) : (
-            <span className={styles.scheduleTagPeak}>PEAK</span>
-          )}
-        </div>
+        <span className={styles.popoverTitle}>DeepSeek Pricing</span>
         <button
           type="button"
           className={styles.closeButton}
           onClick={onClose}
-          aria-label={t.close}
+          aria-label="Close"
         >
-          ✕
+          ×
         </button>
       </div>
 
-      {/* Clocks Row */}
-      <div className={styles.clocksGrid}>
-        <div className={styles.clockItem}>
-          <span className={styles.clockLabel}>{t.utcClock}</span>
-          <span className={styles.clockValue}>{status.timeInfo.utcTime}</span>
-        </div>
-        <div className={styles.clockItem}>
-          <span className={styles.clockLabel}>{t.beijingClock}</span>
-          <span className={styles.clockValue}>{status.timeInfo.beijingTime}</span>
-        </div>
-        <div className={styles.clockItem}>
-          <span className={styles.clockLabel}>{t.localClock}</span>
-          <span className={styles.clockValue}>{status.timeInfo.localTime}</span>
+      {/* Status Summary */}
+      <div className={styles.statusLine}>
+        <span className={styles.statusLabel}>
+          <span className={`${styles.dot} ${isOffPeak ? styles.offPeak : styles.peak}`} />
+          {isOffPeak ? '50% discount active' : 'Peak hours'}
+        </span>
+        <span className={styles.statusDuration}>
+          {isOffPeak ? `Ends in ${status.formattedCountdown}` : `Off-peak in ${status.formattedCountdown}`}
+        </span>
+      </div>
+
+      {/* Peak Schedule */}
+      <div className={styles.scheduleBlock}>
+        <div className={styles.sectionLabel}>Peak Windows (UTC)</div>
+        <div className={styles.scheduleList}>
+          <div className={styles.scheduleItem}>
+            <span>01:00 – 04:00</span>
+            <span>09:00 – 12:00 CST</span>
+          </div>
+          <div className={styles.scheduleItem}>
+            <span>06:00 – 10:00</span>
+            <span>14:00 – 18:00 CST</span>
+          </div>
         </div>
       </div>
 
-      {/* Schedule Summary */}
-      <div className={styles.scheduleSection}>
-        <div className={styles.scheduleHeading}>
-          <span>📅</span>
-          <span>{t.officialSchedule}</span>
+      {/* Model Rates */}
+      <div className={styles.ratesBlock}>
+        <div className={styles.sectionLabel}>
+          Rate per 1M tokens {isOffPeak ? '(50% off)' : '(standard)'}
         </div>
-        <div className={styles.scheduleRow}>
-          <span>{t.morningPeak}</span>
-          <span className={styles.scheduleTagPeak}>{t.peak}</span>
-        </div>
-        <div className={styles.scheduleRow}>
-          <span>{t.afternoonPeak}</span>
-          <span className={styles.scheduleTagPeak}>{t.peak}</span>
-        </div>
-        <div className={styles.scheduleRow}>
-          <span>{t.offPeakAllOther}</span>
-          <span className={styles.scheduleTagOffPeak}>{t.discountBadge}</span>
-        </div>
-      </div>
-
-      {/* Token Rates Table (DeepSeek-V4 Models Only) */}
-      <div className={styles.pricingTableContainer}>
-        <div style={{ fontSize: '11px', fontWeight: 700, opacity: 0.9, letterSpacing: '0.2px' }}>
-          {t.pricingTitle}
-        </div>
-        <table className={styles.pricingTable}>
+        <table className={styles.ratesTable}>
           <thead>
             <tr>
-              <th>{t.model}</th>
-              <th>{t.cacheHit}</th>
-              <th>{t.cacheMiss}</th>
-              <th>{t.output}</th>
+              <th>Model</th>
+              <th>Hit</th>
+              <th>Miss</th>
+              <th>Out</th>
             </tr>
           </thead>
           <tbody>
-            {Object.values(DEEPSEEK_MODELS).map((m) => (
-              <tr key={m.modelId}>
-                <td className={styles.modelName}>{m.name}</td>
-                <td>
-                  <span className={isOffPeak ? styles.peakPrice : ''}>
-                    ${m.peak.inputCacheHit}
-                  </span>
-                  {isOffPeak && (
-                    <span className={styles.offPeakPrice}>
-                      ${m.offPeak.inputCacheHit}
-                    </span>
-                  )}
-                </td>
-                <td>
-                  <span className={isOffPeak ? styles.peakPrice : ''}>
-                    ${m.peak.inputCacheMiss}
-                  </span>
-                  {isOffPeak && (
-                    <span className={styles.offPeakPrice}>
-                      ${m.offPeak.inputCacheMiss}
-                    </span>
-                  )}
-                </td>
-                <td>
-                  <span className={isOffPeak ? styles.peakPrice : ''}>
-                    ${m.peak.output}
-                  </span>
-                  {isOffPeak && (
-                    <span className={styles.offPeakPrice}>
-                      ${m.offPeak.output}
-                    </span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {Object.values(DEEPSEEK_MODELS).map((m) => {
+              const rates = isOffPeak ? m.offPeak : m.peak
+              return (
+                <tr key={m.modelId}>
+                  <td>{m.name.replace('DeepSeek-', '')}</td>
+                  <td className={isOffPeak ? styles.discountedRate : ''}>${rates.inputCacheHit}</td>
+                  <td className={isOffPeak ? styles.discountedRate : ''}>${rates.inputCacheMiss}</td>
+                  <td className={isOffPeak ? styles.discountedRate : ''}>${rates.output}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
+      </div>
+
+      {/* Quiet Clocks Footer */}
+      <div className={styles.clocksFooter}>
+        <span>UTC {status.timeInfo.utcTime.slice(0, 5)}</span>
+        <span>CST {status.timeInfo.beijingTime.slice(0, 5)}</span>
+        <span>Local {status.timeInfo.localTime.slice(0, 5)}</span>
       </div>
     </div>
   )
