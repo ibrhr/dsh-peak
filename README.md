@@ -9,7 +9,7 @@
 
 `dsh-peak` 是专为 **DeepSeek Harness (DSH)** 打造的高性能、热插拔 API 峰谷计费状态指示插件。
 
-DeepSeek API 在**优惠时段（Off-Peak）提供高达 50%（半价）的 Token 费率折扣**。`dsh-peak` 为 DSH Web UI 提供实时状态指示徽章、倒计时切换提醒、UTC/北京/本地多时区时钟对照、全模型费率对比卡片，并为后台任务与 Agent 提供一键查询的 Node 服务接口。
+DeepSeek API 在**优惠时段（Off-Peak）提供高达 50%（半价）的 Token 费率折扣**。`dsh-peak` 为 DSH Web UI 提供实时状态指示徽章、倒计时切换提醒、UTC/北京/本地多时区时钟对照、DeepSeek-V4 费率对比卡片，并为后台任务与 Agent 提供一键查询的 Node 服务接口。
 
 ---
 
@@ -23,7 +23,7 @@ DeepSeek API 在**优惠时段（Off-Peak）提供高达 50%（半价）的 Toke
 - 🟢 **实时峰谷状态指示**：直观展示当前处于 `🟢 优惠时段 (50% OFF)` 还是 `🔴 高峰时段`，毫秒级精准判定。
 - ⏳ **动态倒计时提醒**：实时计算距离下次费率切换（如"距优惠开启 1h 24m"或"距结束 3h 12m"）的剩余时间。
 - 🕒 **多时区对照表**：一览 UTC 计费基准时间、北京时间 (CST / UTC+8) 及浏览器本地时间。
-- 💰 **全模型价格矩阵**：内置 DeepSeek-V4 Flash / Pro、DeepSeek-V3 / R1 等模型的缓存命中、未命中及输出 Token 费率卡与省钱计算器。
+- 💰 **DeepSeek-V4 价格矩阵**：内置 DeepSeek-V4 Flash / Pro 的缓存命中、未命中及输出 Token 费率卡与省钱计算器。
 - ⚡ **无缝 Cordis 生命周期**：遵循 Cordis `ctx.effect` 规范，热切换与卸载时 100% 自动还原 DOM，无内存泄漏与孤儿定时器。
 - 🤖 **内置 Agent 技能**：随仓附带 `.agents/skills/dsh-peak-install` 技能，让 DSH 内部的 AI 能够一键自动安装、解释费率或规划低成本批量任务。
 - 📦 **零构建即装即用**：遵循社区规范预编译发布 `lib/` 产物，安装无需本地编译环境。
@@ -42,7 +42,7 @@ DeepSeek API 计费以 **UTC 标准时间** 为准：
 | **下午高峰** | `06:00 – 10:00 UTC` | `14:00 – 18:00 CST` | 标准费率 (100%) | 🔴 高峰时段 |
 | **晚间/夜间优惠** | `10:00 – 24:00 UTC` | `18:00 – 08:00 (+1d)` | **50% 半价优惠** | 🟢 优惠时段 |
 
-### 📊 模型价格对比表 (每 100 万 Token / 美元)
+### 📊 DeepSeek-V4 模型价格对比表 (每 100 万 Token / 美元)
 
 | 模型 | Token 类型 | 高峰期原价 | **优惠期特价 (50% OFF)** |
 |---|---|---|:---:|
@@ -52,12 +52,6 @@ DeepSeek API 计费以 **UTC 标准时间** 为准：
 | **DeepSeek-V4 Pro** | 输入 (缓存命中) | $0.044 | **$0.022** |
 | | 输入 (缓存未命中) | $1.320 | **$0.660** |
 | | 输出 | $3.960 | **$1.980** |
-| **DeepSeek Chat (V3)** | 输入 (缓存命中) | $0.014 | **$0.007** |
-| | 输入 (缓存未命中) | $0.280 | **$0.140** |
-| | 输出 | $1.100 | **$0.550** |
-| **DeepSeek Reasoner (R1)** | 输入 (缓存命中) | $0.014 | **$0.007** |
-| | 输入 (缓存未命中) | $0.550 | **$0.275** |
-| | 输出 | $2.190 | **$1.095** |
 
 ---
 
@@ -158,7 +152,7 @@ console.log(`直接节省: $${savings.savingsUSD.toFixed(4)} (节省 ${savings.s
 - **Real-Time Visual Pill**: Shows live `🟢 OFF-PEAK (50% OFF)` or `🔴 PEAK` state in DSH Web UI.
 - **Accurate Countdown**: Dynamic timer showing remaining time until next rate transition.
 - **Timezone Clocks**: Live synchronized clocks for UTC, Beijing (CST / UTC+8), and Local time.
-- **Full Model Rate Card**: Quick reference matrix for DeepSeek V4 Flash/Pro, V3, and R1.
+- **DeepSeek-V4 Rate Card**: Quick reference matrix for DeepSeek-V4 Flash and Pro.
 - **Cordis Lifecycle**: 100% safe cleanup via `ctx.effect(() => () => { ... })` with zero leaks.
 - **DSH Agent Skills**: Ready-to-use skill in `.agents/skills/` for AI-assisted workflow optimization.
 

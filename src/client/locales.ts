@@ -20,8 +20,6 @@ export const en = {
   output: 'Output',
   close: 'Close',
   statusTitle: 'DeepSeek API Pricing Status',
-  tipHeading: 'Cost Optimization Tip',
-  tipText: 'Schedule high-volume batch prompts, dataset generation, and indexing during off-peak hours to reduce API token costs by 50%.',
 }
 
 export const zh = {
@@ -46,8 +44,6 @@ export const zh = {
   output: '输出 Token',
   close: '关闭',
   statusTitle: 'DeepSeek API 峰谷计费状态',
-  tipHeading: '省钱建议',
-  tipText: '将批量任务、RAG 知识库构建和高消耗 Agent 运行调度在优惠时段，可直接节省 50% 的 API 费用。',
 }
 
 export type PeakLocaleKey = typeof en

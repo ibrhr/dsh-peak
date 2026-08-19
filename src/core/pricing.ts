@@ -37,38 +37,6 @@ export const DEEPSEEK_MODELS: Record<string, ModelPricing> = {
       output: 1.98,
     },
   },
-  'deepseek-chat': {
-    modelId: 'deepseek-chat',
-    name: 'DeepSeek Chat (V3)',
-    currency: '$',
-    discountPercent: 50,
-    peak: {
-      inputCacheHit: 0.014,
-      inputCacheMiss: 0.28,
-      output: 1.10,
-    },
-    offPeak: {
-      inputCacheHit: 0.007,
-      inputCacheMiss: 0.14,
-      output: 0.55,
-    },
-  },
-  'deepseek-reasoner': {
-    modelId: 'deepseek-reasoner',
-    name: 'DeepSeek Reasoner (R1)',
-    currency: '$',
-    discountPercent: 50,
-    peak: {
-      inputCacheHit: 0.014,
-      inputCacheMiss: 0.55,
-      output: 2.19,
-    },
-    offPeak: {
-      inputCacheHit: 0.007,
-      inputCacheMiss: 0.275,
-      output: 1.095,
-    },
-  },
 }
 
 /**

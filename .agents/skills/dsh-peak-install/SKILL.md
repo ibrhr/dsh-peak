@@ -28,12 +28,6 @@ DeepSeek's API utilizes a dynamic pricing structure where **Off-Peak hours recei
 | **DeepSeek-V4 Pro** | Input (Cache Hit) | $0.044 | **$0.022** |
 | | Input (Cache Miss) | $1.320 | **$0.660** |
 | | Output | $3.960 | **$1.980** |
-| **DeepSeek Chat (V3)** | Input (Cache Hit) | $0.014 | **$0.007** |
-| | Input (Cache Miss) | $0.280 | **$0.140** |
-| | Output | $1.100 | **$0.550** |
-| **DeepSeek Reasoner (R1)**| Input (Cache Hit) | $0.014 | **$0.007** |
-| | Input (Cache Miss) | $0.550 | **$0.275** |
-| | Output | $2.190 | **$1.095** |
 
 ---
 

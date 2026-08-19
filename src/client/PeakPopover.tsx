@@ -40,7 +40,6 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
         onClose()
       }
     }
-    // Listen in capture phase with slight delay so trigger click doesn't instantly close
     const timer = setTimeout(() => {
       document.addEventListener('click', handleClickOutside)
     }, 10)
@@ -59,7 +58,7 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
   }
 
   if (anchorRect && typeof window !== 'undefined') {
-    const popoverWidth = 370
+    const popoverWidth = 360
     let top = anchorRect.bottom + 8
     let left = anchorRect.left
 
@@ -72,8 +71,8 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
     }
 
     // Keep within vertical screen bounds
-    if (top + 450 > window.innerHeight && anchorRect.top > 450) {
-      top = anchorRect.top - 460
+    if (top + 380 > window.innerHeight && anchorRect.top > 380) {
+      top = anchorRect.top - 390
     }
 
     popoverStyle = {
@@ -95,7 +94,6 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
     >
       <div className={styles.popoverHeader}>
         <div className={styles.popoverTitle}>
-          <span>{isOffPeak ? '🌙' : '⚡'}</span>
           <span>{t.statusTitle}</span>
           {isOffPeak ? (
             <span className={styles.scheduleTagOffPeak}>50% OFF</span>
@@ -149,7 +147,7 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
         </div>
       </div>
 
-      {/* Token Rates Table */}
+      {/* Token Rates Table (DeepSeek-V4 Models Only) */}
       <div className={styles.pricingTableContainer}>
         <div style={{ fontSize: '11px', fontWeight: 700, opacity: 0.9, letterSpacing: '0.2px' }}>
           {t.pricingTitle}
@@ -201,12 +199,6 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
             ))}
           </tbody>
         </table>
-      </div>
-
-      {/* Tip Box */}
-      <div className={styles.tipBox}>
-        <strong>💡 {t.tipHeading}</strong>
-        {t.tipText}
       </div>
     </div>
   )
