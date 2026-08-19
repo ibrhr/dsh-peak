@@ -29,6 +29,11 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
         <div className={styles.popoverTitle}>
           <span>{isOffPeak ? '🌙' : '⚡'}</span>
           <span>{t.statusTitle}</span>
+          {isOffPeak ? (
+            <span className={styles.scheduleTagOffPeak}>50% OFF</span>
+          ) : (
+            <span className={styles.scheduleTagPeak}>PEAK</span>
+          )}
         </div>
         <button
           type="button"
@@ -63,22 +68,22 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
           <span>{t.officialSchedule}</span>
         </div>
         <div className={styles.scheduleRow}>
-          <span>• {t.morningPeak}</span>
-          <span style={{ color: '#ef4444', fontWeight: 600 }}>{t.peak}</span>
+          <span>{t.morningPeak}</span>
+          <span className={styles.scheduleTagPeak}>{t.peak}</span>
         </div>
         <div className={styles.scheduleRow}>
-          <span>• {t.afternoonPeak}</span>
-          <span style={{ color: '#ef4444', fontWeight: 600 }}>{t.peak}</span>
+          <span>{t.afternoonPeak}</span>
+          <span className={styles.scheduleTagPeak}>{t.peak}</span>
         </div>
         <div className={styles.scheduleRow}>
-          <span>• {t.offPeakAllOther}</span>
-          <span className={styles.discountCol}>{t.discountBadge}</span>
+          <span>{t.offPeakAllOther}</span>
+          <span className={styles.scheduleTagOffPeak}>{t.discountBadge}</span>
         </div>
       </div>
 
       {/* Token Rates Table */}
-      <div style={{ marginTop: '8px' }}>
-        <div style={{ fontSize: '11px', fontWeight: 600, opacity: 0.8 }}>
+      <div className={styles.pricingTableContainer}>
+        <div style={{ fontSize: '11px', fontWeight: 700, opacity: 0.9, letterSpacing: '0.2px' }}>
           {t.pricingTitle}
         </div>
         <table className={styles.pricingTable}>
@@ -93,24 +98,36 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
           <tbody>
             {Object.values(DEEPSEEK_MODELS).map((m) => (
               <tr key={m.modelId}>
-                <td style={{ fontWeight: 500 }}>{m.name}</td>
+                <td className={styles.modelName}>{m.name}</td>
                 <td>
-                  <span style={{ textDecoration: isOffPeak ? 'line-through' : 'none', opacity: isOffPeak ? 0.6 : 1 }}>
+                  <span className={isOffPeak ? styles.peakPrice : ''}>
                     ${m.peak.inputCacheHit}
                   </span>
-                  {isOffPeak && <span className={styles.discountCol}> ${m.offPeak.inputCacheHit}</span>}
+                  {isOffPeak && (
+                    <span className={styles.offPeakPrice}>
+                      ${m.offPeak.inputCacheHit}
+                    </span>
+                  )}
                 </td>
                 <td>
-                  <span style={{ textDecoration: isOffPeak ? 'line-through' : 'none', opacity: isOffPeak ? 0.6 : 1 }}>
+                  <span className={isOffPeak ? styles.peakPrice : ''}>
                     ${m.peak.inputCacheMiss}
                   </span>
-                  {isOffPeak && <span className={styles.discountCol}> ${m.offPeak.inputCacheMiss}</span>}
+                  {isOffPeak && (
+                    <span className={styles.offPeakPrice}>
+                      ${m.offPeak.inputCacheMiss}
+                    </span>
+                  )}
                 </td>
                 <td>
-                  <span style={{ textDecoration: isOffPeak ? 'line-through' : 'none', opacity: isOffPeak ? 0.6 : 1 }}>
+                  <span className={isOffPeak ? styles.peakPrice : ''}>
                     ${m.peak.output}
                   </span>
-                  {isOffPeak && <span className={styles.discountCol}> ${m.offPeak.output}</span>}
+                  {isOffPeak && (
+                    <span className={styles.offPeakPrice}>
+                      ${m.offPeak.output}
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}
