@@ -26,7 +26,8 @@ export const PeakBadge: React.FC<PeakBadgeProps> = ({
     getPeakStatus(initialDate || new Date(), config, locale)
   )
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   // Update status every second
   useEffect(() => {
@@ -38,39 +39,33 @@ export const PeakBadge: React.FC<PeakBadgeProps> = ({
     return () => clearInterval(timer)
   }, [config, locale])
 
-  // Close popover when clicking outside
-  useEffect(() => {
-    if (!isPopoverOpen) return
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsPopoverOpen(false)
-      }
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!isPopoverOpen && buttonRef.current) {
+      setAnchorRect(buttonRef.current.getBoundingClientRect())
+      setIsPopoverOpen(true)
+    } else {
+      setIsPopoverOpen(false)
     }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isPopoverOpen])
+  }
 
   const t: PeakLocaleKey = locale === 'zh' ? zh : en
   const isOffPeak = status.state === 'OFF_PEAK'
 
   return (
     <div
-      ref={containerRef}
       className={`${styles.badgeContainer} ${className}`}
       style={style}
       data-dsh-peak-state={status.state.toLowerCase()}
     >
       <button
+        ref={buttonRef}
         type="button"
         className={`${styles.pill} ${isOffPeak ? styles.offPeak : styles.peak}`}
-        onClick={() => setIsPopoverOpen((prev) => !prev)}
-        title={`${isOffPeak ? t.offPeak : t.peak} - ${isOffPeak ? t.endsIn : t.nextOffPeakIn} ${status.formattedCountdown}`}
+        onClick={handleToggle}
+        title={`${isOffPeak ? t.offPeak : t.peak} - ${isOffPeak ? t.endsIn : t.nextOffPeakIn} ${status.formattedCountdown} (Click for details)`}
         aria-expanded={isPopoverOpen}
+        aria-haspopup="dialog"
       >
         <span className={styles.dot} />
         <span>{isOffPeak ? t.offPeak : t.peak}</span>
@@ -87,6 +82,7 @@ export const PeakBadge: React.FC<PeakBadgeProps> = ({
       {isPopoverOpen && (
         <PeakPopover
           status={status}
+          anchorRect={anchorRect}
           locale={locale}
           onClose={() => setIsPopoverOpen(false)}
         />

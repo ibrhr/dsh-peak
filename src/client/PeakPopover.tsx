@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import type { PeakStatusResult } from '../core/types.ts'
 import { DEEPSEEK_MODELS } from '../core/pricing.ts'
 import { en, zh, type PeakLocaleKey } from './locales.ts'
@@ -6,21 +7,88 @@ import styles from './PeakBadge.module.css'
 
 export interface PeakPopoverProps {
   status: PeakStatusResult
+  anchorRect: DOMRect | null
   onClose: () => void
   locale?: 'en' | 'zh'
 }
 
 export const PeakPopover: React.FC<PeakPopoverProps> = ({
   status,
+  anchorRect,
   onClose,
   locale = 'en',
 }) => {
+  const popoverRef = useRef<HTMLDivElement>(null)
   const t: PeakLocaleKey = locale === 'zh' ? zh : en
   const isOffPeak = status.state === 'OFF_PEAK'
 
-  return (
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
+
+  // Close on click outside popover
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        onClose()
+      }
+    }
+    // Listen in capture phase with slight delay so trigger click doesn't instantly close
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside)
+    }, 10)
+    return () => {
+      clearTimeout(timer)
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [onClose])
+
+  // Calculate viewport-aware absolute positioning
+  let popoverStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: '56px',
+    left: '20px',
+    zIndex: 99999,
+  }
+
+  if (anchorRect && typeof window !== 'undefined') {
+    const popoverWidth = 370
+    let top = anchorRect.bottom + 8
+    let left = anchorRect.left
+
+    // Keep within horizontal screen bounds
+    if (left + popoverWidth > window.innerWidth - 16) {
+      left = window.innerWidth - popoverWidth - 16
+    }
+    if (left < 16) {
+      left = 16
+    }
+
+    // Keep within vertical screen bounds
+    if (top + 450 > window.innerHeight && anchorRect.top > 450) {
+      top = anchorRect.top - 460
+    }
+
+    popoverStyle = {
+      position: 'fixed',
+      top: `${top}px`,
+      left: `${left}px`,
+      zIndex: 99999,
+    }
+  }
+
+  const content = (
     <div
+      ref={popoverRef}
       className={styles.popover}
+      style={popoverStyle}
       role="dialog"
       aria-label={t.statusTitle}
       onClick={(e) => e.stopPropagation()}
@@ -142,4 +210,10 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
       </div>
     </div>
   )
+
+  if (typeof document !== 'undefined' && document.body) {
+    return createPortal(content, document.body)
+  }
+
+  return content
 }
