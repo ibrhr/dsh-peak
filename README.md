@@ -68,11 +68,11 @@ DeepSeek API 计费以 **UTC 标准时间** 为准：
 在你的 DSH 根目录执行：
 
 ```sh
-# 本地路径安装
-dsh plugin --profile web add /path/to/dsh-peak
+# 通过 GitHub 安装
+dsh plugin --profile web add github:ibrhr/dsh-peak
 
-# 或通过 GitHub 安装
-dsh plugin --profile web add github:dsh-external/dsh-peak
+# 或通过本地路径安装
+dsh plugin --profile web add /path/to/dsh-peak
 ```
 
 > `dsh plugin` 会自动将包声明追加至 profile 的 `dsh.profile.bundles` 中并自动生效。
@@ -81,7 +81,7 @@ dsh plugin --profile web add github:dsh-external/dsh-peak
 
 由于本仓库自带 `.agents/skills/dsh-peak-install` 技能，直接对你的 DSH Agent 说：
 ```
-安装一下这个插件：https://github.com/dsh-external/dsh-peak
+安装一下这个插件：https://github.com/ibrhr/dsh-peak
 ```
 Agent 将自动检测环境、配置 bundle 并挂载插件。
 
@@ -91,7 +91,7 @@ Agent 将自动检测环境、配置 bundle 并挂载插件。
    ```json
    {
      "dependencies": {
-       "@dsh-external/dsh-peak": "file:../dsh-peak"
+       "@dsh-external/dsh-peak": "github:ibrhr/dsh-peak"
      }
    }
    ```
@@ -165,7 +165,7 @@ console.log(`直接节省: $${savings.savingsUSD.toFixed(4)} (节省 ${savings.s
 ### CLI Installation
 ```sh
 cd <your-harness-workspace>
-dsh plugin --profile web add github:dsh-external/dsh-peak
+dsh plugin --profile web add github:ibrhr/dsh-peak
 ```
 
 ---

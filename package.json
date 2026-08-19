@@ -1,7 +1,7 @@
 {
   "name": "@dsh-external/dsh-peak",
   "version": "0.1.0",
-  "description": "DeepSeek API Peak & Off-Peak status indicator plugin for DeepSeek Harness (DSH)",
+  "description": "DeepSeek API Peak & Off-Peak (50% Discount) status indicator plugin for DeepSeek Harness (DSH)",
   "type": "module",
   "main": "lib/index.mjs",
   "types": "lib/index.d.mts",
@@ -19,6 +19,25 @@
     },
     "./package.json": "./package.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibrhr/dsh-peak.git"
+  },
+  "homepage": "https://github.com/ibrhr/dsh-peak#readme",
+  "bugs": {
+    "url": "https://github.com/ibrhr/dsh-peak/issues"
+  },
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "peak-hours",
+    "off-peak",
+    "pricing",
+    "tokens"
+  ],
   "dsh": {
     "bundle": {
       "patch": "./cordis.yml"

@@ -44,9 +44,9 @@ DeepSeek's API utilizes a dynamic pricing structure where **Off-Peak hours recei
 Run the following command inside your DSH environment:
 
 ```sh
+dsh plugin --profile web add github:ibrhr/dsh-peak
+# Or via local path
 dsh plugin --profile web add <path-to-dsh-peak>
-# Or via GitHub repository
-dsh plugin --profile web add github:dsh-external/dsh-peak
 ```
 
 ### Manual Configuration via Profile Bundles
@@ -55,7 +55,7 @@ dsh plugin --profile web add github:dsh-external/dsh-peak
    ```json
    {
      "dependencies": {
-       "@dsh-external/dsh-peak": "file:../dsh-peak"
+       "@dsh-external/dsh-peak": "github:ibrhr/dsh-peak"
      }
    }
    ```
