@@ -1,28 +1,35 @@
 /**
- * Schedule window representing a start and end time in UTC (HH:MM).
- */
-export interface PeakWindow {
-  /** Start time in "HH:MM" 24h format (UTC) */
-  start: string
-  /** End time in "HH:MM" 24h format (UTC) */
-  end: string
-  /** Description or label */
-  label?: string
-}
-
-/**
  * Peak state identifier.
  */
 export type PeakState = 'OFF_PEAK' | 'PEAK'
 
 /**
+ * Schedule rule system.
+ */
+export type ScheduleType = 'official_utc' | 'legacy_beijing'
+
+/**
+ * Schedule window representing a start and end time.
+ */
+export interface ScheduleWindow {
+  start: string
+  end: string
+  startMinute: number
+  endMinute: number
+  state: PeakState
+  label: string
+}
+
+/**
  * Time and timezone information.
  */
 export interface TimeInfo {
+  timestamp: Date
+  iso: string
   utcTime: string
   beijingTime: string
   localTime: string
-  currentDate: Date
+  timeZone: string
 }
 
 /**
@@ -30,13 +37,14 @@ export interface TimeInfo {
  */
 export interface PeakStatusResult {
   state: PeakState
-  isOffPeak: boolean
   isPeak: boolean
   discountPercent: number
-  activeWindow?: PeakWindow
+  currentWindow: ScheduleWindow
+  nextWindow: ScheduleWindow
   nextTransitionTime: Date
-  secondsToNextTransition: number
+  timeToNextChangeMs: number
   formattedCountdown: string
+  scheduleType: ScheduleType
   timeInfo: TimeInfo
 }
 
@@ -64,6 +72,5 @@ export interface ModelPricing {
  * Config options for schedule calculations.
  */
 export interface PeakScheduleConfig {
-  mode?: 'official_utc' | 'legacy_cst'
-  customWindows?: PeakWindow[]
+  scheduleType?: ScheduleType
 }
