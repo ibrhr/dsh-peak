@@ -1,24 +1,3 @@
-import { defineConfig } from 'tsdown'
+import { clientBundle } from './build/tsdown.client.ts'
 
-export default defineConfig([
-  {
-    entry: { index: 'src/index.ts' },
-    outDir: 'lib',
-    format: 'esm',
-    target: 'es2022',
-    platform: 'node',
-    dts: true,
-    clean: true,
-    sourcemap: true,
-  },
-  {
-    entry: { client: 'src/client/index.ts' },
-    outDir: 'lib',
-    format: ['esm', 'cjs'],
-    target: 'es2022',
-    platform: 'browser',
-    dts: true,
-    clean: false,
-    sourcemap: true,
-  },
-])
+export default clientBundle('@dsh-external/dsh-peak', ['src/index.ts'])

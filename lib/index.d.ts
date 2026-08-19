@@ -204,4 +204,3 @@ declare function createPeakService(): PeakService;
 declare function apply(ctx: any): void;
 //#endregion
 export { type CostCalculationParams, type CostEstimateResult, DEEPSEEK_MODELS, LEGACY_BEIJING_WINDOWS, OFFICIAL_UTC_WINDOWS, type PeakScheduleConfig, PeakService, type PeakState, type PeakStatusResult, type ScheduleType, type ScheduleWindow, type TimeInfo, apply, calculateTokenSavings, createPeakService, formatClockTime, formatCountdown, formatPrice, getPeakStatus, getScheduleWindows, getTimeInfo, isPeak };
-//# sourceMappingURL=index.d.mts.map
