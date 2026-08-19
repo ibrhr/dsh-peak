@@ -1,0 +1,4 @@
+# dsh-peak patch: inserts dsh-peak client/host entry into profile bundles.
+- insert:
+    - id: peak
+      name: '@dsh-external/dsh-peak'

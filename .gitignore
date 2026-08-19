@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Logs & temp
+*.log
+.temp/
+.cache/
+coverage/
+dist/
+
+# Editor & OS
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.idea/
+.vscode/
+
+# Note: lib/ is intentionally tracked for zero-build distribution in DSH ecosystem

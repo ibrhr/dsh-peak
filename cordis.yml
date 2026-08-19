@@ -1,0 +1,6 @@
+# dsh-peak Web overlay: mounts the DeepSeek API Peak Status Indicator as a Web client plugin row.
+# Apply this file with `dsh web --patch ./cordis.yml` or merge the insert
+# into your profile's cordis.patch.yml.
+- insert:
+    - id: peak
+      name: '@dsh-external/dsh-peak'

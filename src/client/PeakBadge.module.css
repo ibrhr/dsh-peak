@@ -1,0 +1,288 @@
+/* Container for the badge */
+.badgeContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  user-select: none;
+  z-index: 9999;
+}
+
+/* Base pill styling */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+.pill:active {
+  transform: translateY(0);
+}
+
+/* State: Off-Peak (Green / Emerald / Cyan) */
+.offPeak {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #059669;
+}
+
+[data-ds-dark-theme="true"] .offPeak,
+:global(.dark) .offPeak,
+:global([data-theme="dark"]) .offPeak {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(52, 211, 153, 0.4);
+  color: #34d399;
+}
+
+/* State: Peak (Amber / Red) */
+.peak {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #dc2626;
+}
+
+[data-ds-dark-theme="true"] .peak,
+:global(.dark) .peak,
+:global([data-theme="dark"]) .peak {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #f87171;
+}
+
+/* Pulsing Status Dot */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.offPeak .dot {
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.peak .dot {
+  background-color: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+/* Discount Tag */
+.discountTag {
+  background: #10b981;
+  color: #ffffff;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.countdownText {
+  opacity: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Popover Card */
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 330px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  color: #1f2937;
+  font-size: 13px;
+  line-height: 1.5;
+  animation: fadeIn 0.15s ease-out;
+  z-index: 10000;
+}
+
+[data-ds-dark-theme="true"] .popover,
+:global(.dark) .popover,
+:global([data-theme="dark"]) .popover {
+  background: #1e222d;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e5e7eb;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popoverHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+[data-ds-dark-theme="true"] .popoverHeader,
+:global(.dark) .popoverHeader,
+:global([data-theme="dark"]) .popoverHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.popoverTitle {
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.5;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.closeButton:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Clocks grid */
+.clocksGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.03);
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+[data-ds-dark-theme="true"] .clocksGrid,
+:global(.dark) .clocksGrid,
+:global([data-theme="dark"]) .clocksGrid {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.clockItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.clockLabel {
+  font-size: 10px;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.clockValue {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+/* Schedule section */
+.scheduleSection {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.scheduleHeading {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scheduleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 0;
+  opacity: 0.85;
+}
+
+/* Pricing table */
+.pricingTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.pricingTable th,
+.pricingTable td {
+  padding: 4px 6px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-ds-dark-theme="true"] .pricingTable th,
+[data-ds-dark-theme="true"] .pricingTable td,
+:global(.dark) .pricingTable th,
+:global(.dark) .pricingTable td {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.pricingTable th {
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+.discountCol {
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Tip Box */
+.tipBox {
+  background: rgba(16, 185, 129, 0.08);
+  border-left: 3px solid #10b981;
+  padding: 8px 10px;
+  border-radius: 0 6px 6px 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.tipBox strong {
+  color: #059669;
+  display: block;
+  margin-bottom: 2px;
+}
+
+[data-ds-dark-theme="true"] .tipBox strong,
+:global(.dark) .tipBox strong {
+  color: #34d399;
+}
