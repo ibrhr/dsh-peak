@@ -53,14 +53,14 @@ function findHeaderMountTarget(): { parent: Element; insertBeforeNode: Node | nu
 
   // 1. Look for mode selector/badge inside header to place immediately to its right
   const modeEl = header.querySelector(':is([class*="mode"], [data-slot*="mode"], [class*="badge"])')
-  if (modeEl && modeEl.parentNode) {
-    return { parent: modeEl.parentNode, insertBeforeNode: modeEl.nextSibling }
+  if (modeEl && modeEl.parentElement) {
+    return { parent: modeEl.parentElement, insertBeforeNode: modeEl.nextSibling }
   }
 
   // 2. Look for title/session container to place immediately to its right
   const titleEl = header.querySelector(':is([class*="title"], [class*="session"], [class*="breadcrumb"], h1, h2, [data-slot*="title"])')
-  if (titleEl && titleEl.parentNode) {
-    return { parent: titleEl.parentNode, insertBeforeNode: titleEl.nextSibling }
+  if (titleEl && titleEl.parentElement) {
+    return { parent: titleEl.parentElement, insertBeforeNode: titleEl.nextSibling }
   }
 
   // 3. Look for the left header group (leading flex item) and append to its right end
