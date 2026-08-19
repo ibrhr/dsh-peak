@@ -46,16 +46,16 @@ export const PeakPopover: React.FC<PeakPopoverProps> = ({
     }
   }, [onClose])
 
-  // Positioning
+  // Positioning: align with the right edge of anchor in top-right header
   let popoverStyle: React.CSSProperties = {
     top: '48px',
-    left: '20px',
+    right: '20px',
   }
 
   if (anchorRect && typeof window !== 'undefined') {
-    const popoverWidth = 300
+    const popoverWidth = 290
     let top = anchorRect.bottom + 6
-    let left = anchorRect.left
+    let left = anchorRect.right - popoverWidth
 
     if (left + popoverWidth > window.innerWidth - 12) {
       left = window.innerWidth - popoverWidth - 12

@@ -1,7 +1,7 @@
 /**
  * dsh-peak client plugin entry for DeepSeek Harness (Browser half).
  *
- * Provides a minimal, lowkey status indicator for DeepSeek API peak vs off-peak hours.
+ * Places a minimal, lowkey status indicator in the top-right header actions bar (left of Session log).
  */
 
 import React from 'react'
@@ -44,44 +44,37 @@ export function mountPeakBadge(
 }
 
 /**
- * Locate the exact element representing the session mode / title in the header row.
+ * Locate placement target: Top-Right header actions, immediately to the LEFT of "Session log".
  */
 function findHeaderMountTarget(): { parent: Element; insertBeforeNode: Node | null } | null {
-  // 1. Search for element containing "mode" text within header
-  const headerElements = document.querySelectorAll('header *')
+  const header = document.querySelector('header')
+  if (!header) return null
+
+  // 1. Search for "Session log" button or link within header
+  const headerElements = header.querySelectorAll('*')
   for (const el of headerElements) {
     if (
       el.children.length === 0 &&
       el.textContent &&
-      el.textContent.toLowerCase().includes('mode')
+      el.textContent.toLowerCase().includes('session log')
     ) {
-      const modeContainer = el.closest('button, [class*="mode"], [class*="badge"], [data-slot*="mode"], div') || el
-      if (modeContainer.parentElement) {
-        return { parent: modeContainer.parentElement, insertBeforeNode: modeContainer.nextSibling }
+      const sessionLogBtn = el.closest('button, a, [class*="action"], [class*="button"]') || el
+      if (sessionLogBtn.parentElement) {
+        return { parent: sessionLogBtn.parentElement, insertBeforeNode: sessionLogBtn }
       }
     }
   }
 
-  // 2. Search for explicit mode selectors
-  const modeSelector = document.querySelector('header :is([class*="mode"], [data-slot*="mode"], button:has([class*="mode"]))')
-  if (modeSelector && modeSelector.parentElement) {
-    return { parent: modeSelector.parentElement, insertBeforeNode: modeSelector.nextSibling }
+  // 2. Look for trailing header action bar
+  const trailingActions = header.querySelector(
+    ':is([class*="action"], [class*="trailing"], [class*="right"], [class*="end"], [data-slot*="action"])'
+  )
+  if (trailingActions && trailingActions !== header) {
+    return { parent: trailingActions, insertBeforeNode: trailingActions.firstChild }
   }
 
-  // 3. Search for title row container
-  const titleEl = document.querySelector('header :is([class*="title"], [class*="session"], h1, h2, [data-slot*="title"])')
-  if (titleEl && titleEl.parentElement) {
-    return { parent: titleEl.parentElement, insertBeforeNode: titleEl.nextSibling }
-  }
-
-  // 4. Header inner flex row
-  const header = document.querySelector('header')
-  if (header) {
-    const row = header.querySelector(':is([class*="row"], [class*="bar"], [class*="content"], div)') || header
-    return { parent: row, insertBeforeNode: null }
-  }
-
-  return null
+  // 3. Fallback: append to header itself
+  return { parent: header, insertBeforeNode: null }
 }
 
 /**
@@ -118,7 +111,7 @@ export function apply(ctx: any): void {
     }
   }
 
-  // 3. Mount indicator to DOM inline in header
+  // 3. Mount indicator to DOM inline in header top-right
   if (typeof document !== 'undefined' && typeof window !== 'undefined') {
     const MOUNT_ID = 'dsh-peak-indicator-root'
 
@@ -133,7 +126,7 @@ export function apply(ctx: any): void {
     mountContainer.style.display = 'inline-flex'
     mountContainer.style.alignItems = 'center'
     mountContainer.style.alignSelf = 'center'
-    mountContainer.style.marginLeft = '8px'
+    mountContainer.style.marginRight = '8px'
     mountContainer.style.verticalAlign = 'middle'
     mountContainer.style.flexShrink = '0'
 
@@ -141,8 +134,18 @@ export function apply(ctx: any): void {
 
     const attach = () => {
       const target = findHeaderMountTarget()
-      if (target && mountContainer.parentElement !== target.parent) {
-        target.parent.insertBefore(mountContainer, target.insertBeforeNode)
+      if (target) {
+        try {
+          if (mountContainer.parentElement !== target.parent || mountContainer.nextSibling !== target.insertBeforeNode) {
+            if (target.insertBeforeNode && target.insertBeforeNode.parentNode === target.parent) {
+              target.parent.insertBefore(mountContainer, target.insertBeforeNode)
+            } else {
+              target.parent.appendChild(mountContainer)
+            }
+          }
+        } catch {
+          // ignore DOM insertion race
+        }
         if (!unmount) {
           unmount = mountPeakBadge(mountContainer, {
             locale:
