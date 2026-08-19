@@ -45,23 +45,33 @@ export function mountPeakBadge(
 }
 
 /**
- * Locate best placement container in DSH UI (header actions or navbar).
+ * Locate best placement in DSH UI (to the RIGHT of session title and mode tag).
  */
 function findHeaderMountTarget(): { parent: Element; insertBeforeNode: Node | null } | null {
   const header = document.querySelector('header')
   if (!header) return null
 
-  // Check for trailing header action bar / session log container
-  const actionContainer = header.querySelector(
-    ":is([class*='action'], [class*='trailing'], [class*='toolbar'], [data-slot*='header'], nav)"
-  )
-  if (actionContainer) {
-    return { parent: actionContainer, insertBeforeNode: actionContainer.firstChild }
+  // 1. Look for mode selector/badge inside header to place immediately to its right
+  const modeEl = header.querySelector(':is([class*="mode"], [data-slot*="mode"], [class*="badge"])')
+  if (modeEl && modeEl.parentNode) {
+    return { parent: modeEl.parentNode, insertBeforeNode: modeEl.nextSibling }
   }
 
-  // Fallback to inserting before the last child of header
-  if (header.lastElementChild) {
-    return { parent: header, insertBeforeNode: header.lastElementChild }
+  // 2. Look for title/session container to place immediately to its right
+  const titleEl = header.querySelector(':is([class*="title"], [class*="session"], [class*="breadcrumb"], h1, h2, [data-slot*="title"])')
+  if (titleEl && titleEl.parentNode) {
+    return { parent: titleEl.parentNode, insertBeforeNode: titleEl.nextSibling }
+  }
+
+  // 3. Look for the left header group (leading flex item) and append to its right end
+  const leadingGroup = header.querySelector(':is([class*="leading"], [class*="left"], [class*="start"])')
+  if (leadingGroup) {
+    return { parent: leadingGroup, insertBeforeNode: null }
+  }
+
+  // 4. If header has a first child section (left cluster), append after its elements
+  if (header.firstElementChild && header.firstElementChild !== header.lastElementChild) {
+    return { parent: header.firstElementChild, insertBeforeNode: null }
   }
 
   return { parent: header, insertBeforeNode: null }
@@ -102,7 +112,7 @@ export function apply(ctx: any): void {
     }
   }
 
-  // 3. Mount overlay to DOM if running in a browser environment
+  // 3. Mount indicator to DOM if running in a browser environment
   if (typeof document !== 'undefined' && typeof window !== 'undefined') {
     const MOUNT_ID = 'dsh-peak-indicator-root'
 
@@ -115,19 +125,18 @@ export function apply(ctx: any): void {
     const mountContainer = document.createElement('div')
     mountContainer.id = MOUNT_ID
     mountContainer.dataset.dshPlugin = 'dsh-peak'
+    mountContainer.style.display = 'inline-flex'
+    mountContainer.style.alignItems = 'center'
+    mountContainer.style.marginLeft = '8px'
+    mountContainer.style.marginRight = '8px'
 
     const target = findHeaderMountTarget()
     if (target) {
-      mountContainer.style.display = 'inline-flex'
-      mountContainer.style.alignItems = 'center'
-      mountContainer.style.marginRight = '12px'
-      mountContainer.style.marginLeft = '8px'
       target.parent.insertBefore(mountContainer, target.insertBeforeNode)
     } else {
-      // Non-overlapping fallback position (safely to the left of Session Log)
       mountContainer.style.position = 'fixed'
       mountContainer.style.top = '10px'
-      mountContainer.style.right = '175px'
+      mountContainer.style.left = '320px'
       mountContainer.style.zIndex = '9998'
       document.body.appendChild(mountContainer)
     }
@@ -143,18 +152,18 @@ export function apply(ctx: any): void {
 
     // Observer to re-position when DSH re-renders the header dynamically
     let observer: MutationObserver | null = null
-    if (!target && typeof MutationObserver !== 'undefined') {
+    if (typeof MutationObserver !== 'undefined') {
       observer = new MutationObserver(() => {
         const newTarget = findHeaderMountTarget()
         if (newTarget && mountContainer.parentNode !== newTarget.parent) {
           mountContainer.style.position = ''
           mountContainer.style.top = ''
-          mountContainer.style.right = ''
+          mountContainer.style.left = ''
           mountContainer.style.zIndex = ''
           mountContainer.style.display = 'inline-flex'
           mountContainer.style.alignItems = 'center'
-          mountContainer.style.marginRight = '12px'
           mountContainer.style.marginLeft = '8px'
+          mountContainer.style.marginRight = '8px'
           newTarget.parent.insertBefore(mountContainer, newTarget.insertBeforeNode)
         }
       })

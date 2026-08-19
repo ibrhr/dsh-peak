@@ -63,20 +63,14 @@ export const PeakBadge: React.FC<PeakBadgeProps> = ({
         type="button"
         className={`${styles.pill} ${isOffPeak ? styles.offPeak : styles.peak}`}
         onClick={handleToggle}
-        title={`${isOffPeak ? t.offPeak : t.peak} - ${isOffPeak ? t.endsIn : t.nextOffPeakIn} ${status.formattedCountdown} (Click for details)`}
+        title={`${isOffPeak ? t.offPeak : t.peak} - ${isOffPeak ? t.endsIn : t.nextOffPeakIn} ${status.formattedCountdown}`}
         aria-expanded={isPopoverOpen}
         aria-haspopup="dialog"
       >
         <span className={styles.dot} />
-        <span>{isOffPeak ? t.offPeak : t.peak}</span>
-
-        {isOffPeak && !compact && (
-          <span className={styles.discountTag}>{t.discountBadge}</span>
-        )}
-
-        <span className={styles.countdownText}>
-          {isOffPeak ? t.endsIn : t.nextOffPeakIn} {status.formattedCountdown}
-        </span>
+        <span className={styles.statusText}>{isOffPeak ? t.offPeak : t.peak}</span>
+        <span className={styles.separator}>·</span>
+        <span className={styles.countdownText}>{status.formattedCountdown}</span>
       </button>
 
       {isPopoverOpen && (

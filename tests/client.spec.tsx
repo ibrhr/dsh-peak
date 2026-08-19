@@ -13,20 +13,18 @@ describe('Client UI Plugin', () => {
     document.body.innerHTML = ''
   })
 
-  it('renders PeakBadge in OFF_PEAK state with discount badge', () => {
+  it('renders PeakBadge in OFF_PEAK state with clean indicator', () => {
     const offPeakDate = new Date('2026-08-19T00:30:00Z')
     render(<PeakBadge initialDate={offPeakDate} />)
 
-    expect(screen.getByText('OFF-PEAK')).toBeDefined()
-    expect(screen.getByText('50% OFF')).toBeDefined()
+    expect(screen.getByText('Off-peak')).toBeDefined()
   })
 
-  it('renders PeakBadge in PEAK state without discount badge', () => {
+  it('renders PeakBadge in PEAK state', () => {
     const peakDate = new Date('2026-08-19T02:00:00Z')
     render(<PeakBadge initialDate={peakDate} />)
 
-    expect(screen.getByText('PEAK')).toBeDefined()
-    expect(screen.queryByText('50% OFF')).toBeNull()
+    expect(screen.getByText('Peak')).toBeDefined()
   })
 
   it('renders Chinese copy when locale="zh"', () => {
@@ -34,7 +32,6 @@ describe('Client UI Plugin', () => {
     render(<PeakBadge initialDate={offPeakDate} locale="zh" />)
 
     expect(screen.getByText('优惠时段')).toBeDefined()
-    expect(screen.getByText('半价 50% OFF')).toBeDefined()
   })
 
   it('opens and closes popover on click', () => {
@@ -46,6 +43,7 @@ describe('Client UI Plugin', () => {
 
     expect(screen.getByText('DeepSeek API Pricing Status')).toBeDefined()
     expect(screen.getByText('DeepSeek-V4 Flash')).toBeDefined()
+    expect(screen.getByText('DeepSeek-V4 Pro')).toBeDefined()
 
     // Close button
     const closeBtn = screen.getByLabelText('Close')

@@ -1,6 +1,6 @@
 export const en = {
-  offPeak: 'OFF-PEAK',
-  peak: 'PEAK',
+  offPeak: 'Off-peak',
+  peak: 'Peak',
   discountBadge: '50% OFF',
   normalRate: 'Standard Rate',
   nextOffPeakIn: 'Off-peak in',
@@ -25,7 +25,7 @@ export const en = {
 export const zh = {
   offPeak: '优惠时段',
   peak: '高峰时段',
-  discountBadge: '半价 50% OFF',
+  discountBadge: '50% 优惠',
   normalRate: '原价计费',
   nextOffPeakIn: '距优惠开启',
   endsIn: '距结束',
