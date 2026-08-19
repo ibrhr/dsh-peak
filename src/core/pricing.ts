@@ -1,4 +1,4 @@
-import type { CostCalculationParams, CostEstimateResult, ModelPricing } from './types.ts'
+import type { ModelPricing } from './types.ts'
 
 /**
  * Official DeepSeek API Model Rate Cards (USD per 1M tokens).
@@ -37,42 +37,4 @@ export const DEEPSEEK_MODELS: Record<string, ModelPricing> = {
       output: 1.98,
     },
   },
-}
-
-/**
- * Calculate token costs and estimated savings between Peak and Off-Peak.
- */
-export function calculateTokenSavings(
-  params: CostCalculationParams
-): CostEstimateResult {
-  const model = DEEPSEEK_MODELS[params.modelId || 'deepseek-v4-flash'] || DEEPSEEK_MODELS['deepseek-v4-flash']
-  const hitRatio = Math.max(0, Math.min(1, params.cacheHitRatio ?? 0.5))
-  
-  const cacheHitTokens = params.inputTokens * hitRatio
-  const cacheMissTokens = params.inputTokens * (1 - hitRatio)
-  const outputTokens = params.outputTokens
-
-  // Per 1M tokens factor
-  const factor = 1 / 1_000_000
-
-  const peakCostUSD =
-    cacheHitTokens * factor * model.peak.inputCacheHit +
-    cacheMissTokens * factor * model.peak.inputCacheMiss +
-    outputTokens * factor * model.peak.output
-
-  const offPeakCostUSD =
-    cacheHitTokens * factor * model.offPeak.inputCacheHit +
-    cacheMissTokens * factor * model.offPeak.inputCacheMiss +
-    outputTokens * factor * model.offPeak.output
-
-  const savingsUSD = peakCostUSD - offPeakCostUSD
-  const savingsPercent = peakCostUSD > 0 ? (savingsUSD / peakCostUSD) * 100 : 0
-
-  return {
-    modelName: model.name,
-    peakCostUSD,
-    offPeakCostUSD,
-    savingsUSD,
-    savingsPercent,
-  }
 }

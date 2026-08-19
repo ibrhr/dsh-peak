@@ -1,6 +1,6 @@
 ---
 name: dsh-peak-install
-description: Install, configure, or query the dsh-peak plugin for DeepSeek Harness (DSH). Tells whether DeepSeek API is currently on-peak or off-peak (50% discount), displays transition countdowns, explains token pricing rates, and automates plugin registration for DSH Web.
+description: Install, configure, or query the dsh-peak plugin for DeepSeek Harness (DSH). Tells whether DeepSeek API is currently on-peak or off-peak (50% discount), displays transition countdowns, and automates plugin registration for DSH Web.
 ---
 
 # dsh-peak: DeepSeek API Peak Status & Discount Guide
@@ -18,7 +18,7 @@ DeepSeek's API utilizes a dynamic pricing structure where **Off-Peak hours recei
 - **Afternoon Peak**: `06:00 – 10:00 UTC` (Beijing Time: `14:00 – 18:00 CST`)
 - **Off-Peak (50% OFF)**: All other hours (`00:00–01:00`, `04:00–06:00`, `10:00–24:00` UTC)
 
-### Token Rate Reference (USD per 1M tokens)
+### DeepSeek-V4 Rate Reference (USD per 1M tokens)
 
 | Model | Token Type | Peak Rate | Off-Peak Rate (50% OFF) |
 |---|---|---|---|
@@ -38,9 +38,7 @@ DeepSeek's API utilizes a dynamic pricing structure where **Off-Peak hours recei
 Run the following command inside your DSH environment:
 
 ```sh
-dsh plugin --profile web add github:ibrhr/dsh-peak
-# Or via local path
-dsh plugin --profile web add <path-to-dsh-peak>
+pnpm dsh plugin --profile web add github:ibrhr/dsh-peak
 ```
 
 ### Manual Configuration via Profile Bundles
@@ -68,25 +66,3 @@ dsh plugin --profile web add <path-to-dsh-peak>
    }
    ```
 3. Run `pnpm install` in `~/.dsh/profiles/web` and restart `dsh web`.
-
----
-
-## 3. Host-Side Programmatic Usage
-
-Host agents and scripts can query peak status directly:
-
-```ts
-import { isPeak, getPeakStatus, calculateTokenSavings } from '@dsh-external/dsh-peak'
-
-// Check if currently peak
-if (isPeak()) {
-  console.log('Currently in peak hours - consider scheduling heavy batch jobs later')
-} else {
-  console.log('50% Off-peak discount is active!')
-}
-
-// Full status evaluation
-const status = getPeakStatus()
-console.log(`Current state: ${status.state}`)
-console.log(`Next transition: ${status.formattedCountdown} remaining`)
-```

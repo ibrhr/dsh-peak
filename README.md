@@ -7,9 +7,9 @@
   <img src="https://img.shields.io/badge/License-BSD--3--Clause-green?style=for-the-badge" alt="License" />
 </p>
 
-`dsh-peak` is a lightweight, theme-adaptive status indicator and rate-monitoring plugin for **DeepSeek Harness (DSH)**.
+`dsh-peak` is a lightweight, theme-adaptive status indicator plugin for **DeepSeek Harness (DSH)**.
 
-DeepSeek API offers a **50% discount** on token pricing during off-peak hours. `dsh-peak` seamlessly integrates into the DSH Web UI header right beside your session mode tag, showing real-time discount status, dynamic transition countdowns, multi-timezone clocks, and DeepSeek-V4 model rate cards. It also exposes a Node service API for host agents and automated batch dispatchers.
+DeepSeek API offers a **50% discount** on token pricing during off-peak hours. `dsh-peak` integrates directly into the DSH Web UI header right next to your session mode tag, showing real-time discount status, dynamic transition countdowns, multi-timezone clocks, and DeepSeek-V4 model rate cards.
 
 ---
 
@@ -97,44 +97,6 @@ Since this repository ships with an agent skill, prompt your DSH Agent:
    }
    ```
 3. Run `pnpm install` in `~/.dsh/profiles/web` and restart `dsh web`.
-
----
-
-## Programmatic API (Host / Node / Agents)
-
-`dsh-peak` exposes a comprehensive Node and TypeScript API for batch processors, automation scripts, and custom agent workflows:
-
-```ts
-import { isPeak, getPeakStatus, calculateTokenSavings, DEEPSEEK_MODELS } from '@dsh-external/dsh-peak'
-
-// 1. Quick boolean check
-if (isPeak()) {
-  console.log('Peak pricing is active. Consider delaying heavy batch tasks to off-peak hours.')
-} else {
-  console.log('50% Off-peak discount is active!')
-}
-
-// 2. Full status inspection
-const status = getPeakStatus()
-console.log(`Current state: ${status.state}`)                  // 'OFF_PEAK' | 'PEAK'
-console.log(`Discount: ${status.discountPercent}%`)            // 50 | 0
-console.log(`Time to next transition: ${status.formattedCountdown}`) // e.g. "1h 24m"
-console.log(`UTC Time: ${status.timeInfo.utcTime}`)
-console.log(`Beijing Time: ${status.timeInfo.beijingTime}`)
-console.log(`Local Time: ${status.timeInfo.localTime}`)
-
-// 3. Token cost and savings estimation
-const savings = calculateTokenSavings({
-  inputTokens: 1_000_000,
-  outputTokens: 500_000,
-  cacheHitRatio: 0.8,
-  modelId: 'deepseek-v4-flash',
-})
-
-console.log(`Peak cost: $${savings.peakCostUSD.toFixed(4)}`)
-console.log(`Off-peak cost: $${savings.offPeakCostUSD.toFixed(4)}`)
-console.log(`Estimated savings: $${savings.savingsUSD.toFixed(4)} (${savings.savingsPercent}% off)`)
-```
 
 ---
 
