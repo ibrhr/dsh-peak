@@ -2,9 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/DSH-Plugin-blue?style=for-the-badge&logo=deepseek" alt="DSH Plugin" />
-  <img src="https://img.shields.io/badge/Discount-50%25%20OFF-10b981?style=for-the-badge" alt="50% Off Peak Discount" />
   <img src="https://img.shields.io/badge/Cordis-v4-purple?style=for-the-badge" alt="Cordis v4" />
-  <img src="https://img.shields.io/badge/License-BSD--3--Clause-green?style=for-the-badge" alt="License" />
 </p>
 
 `dsh-peak` is a lightweight, theme-adaptive status indicator plugin for **DeepSeek Harness (DSH)**.
